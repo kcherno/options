@@ -6,11 +6,11 @@ namespace options
 {
     struct option final
     {
-        std::string short_name;
-        std::string long_name;
-        std::string description;
-        bool        is_required;
-        bool        has_arguments;
+        std::string short_name    = {};
+        std::string long_name     = {};
+        std::string description   = {};
+        bool        is_required   = false;
+        bool        has_arguments = false;
 
         std::string representation() const
         {
