@@ -1,4 +1,8 @@
-set(source_files is_short_option_name.cpp grammar.cpp option.cpp)
+set(source_files
+    grammar.cpp
+    is_long_option_name.cpp
+    is_short_option_name.cpp
+    option.cpp)
 
 foreach(source_file ${source_files})
 
