@@ -5,6 +5,7 @@
 
 #include <cctype>
 
+#include "options/is_short_option_name.hpp"
 #include "options/grammar.hpp"
 #include "options/option.hpp"
 
@@ -29,11 +30,6 @@ namespace
         }
 
         return false;
-    }
-
-    inline bool is_short_option_name(std::string_view name) noexcept
-    {
-        return name.size() == 2 && name[0] == '-' && std::isalnum(name[1]);
     }
 }
 
