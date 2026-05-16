@@ -11,7 +11,7 @@
 #include "options/grammar.hpp"
 #include "options/option.hpp"
 
-BOOST_AUTO_TEST_SUITE(options);
+BOOST_AUTO_TEST_SUITE(grammar);
 
 BOOST_AUTO_TEST_SUITE(constructor);
 
@@ -166,7 +166,7 @@ BOOST_AUTO_TEST_CASE(copy_constructor)
     BOOST_CHECK_EQUAL(grammar_2["--verbose"].description, "enable verbose mode");
 }
 
-BOOST_AUTO_TEST_SUITE(move_constructor)
+BOOST_AUTO_TEST_CASE(move_constructor)
 {
     options::grammar grammar_1 {
         options::option {
@@ -255,7 +255,7 @@ BOOST_AUTO_TEST_CASE(parameterized_constructor)
     BOOST_CHECK_EQUAL(const_grammar.size(), 0);
 }
 
-BOOST_AUTO_TEST_SUITE_END(); // options/constructor
+BOOST_AUTO_TEST_SUITE_END(); // grammar/constructor
 
 BOOST_AUTO_TEST_SUITE(add_option);
 
@@ -354,7 +354,7 @@ BOOST_AUTO_TEST_CASE(add_option_with_long_name)
         });
 }
 
-BOOST_AUTO_TEST_SUITE_END(); // options/add_option
+BOOST_AUTO_TEST_SUITE_END(); // grammar/add_option
 
 BOOST_AUTO_TEST_SUITE(verify);
 
@@ -499,6 +499,6 @@ BOOST_AUTO_TEST_CASE(valid_short_option_names)
         options::grammar::verify(options::option {.short_name = "-0"}));
 }
 
-BOOST_AUTO_TEST_SUITE_END(); // options/verify
+BOOST_AUTO_TEST_SUITE_END(); // grammar/verify
 
-BOOST_AUTO_TEST_SUITE_END(); // options
+BOOST_AUTO_TEST_SUITE_END(); // grammar
