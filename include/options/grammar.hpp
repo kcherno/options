@@ -91,9 +91,14 @@ namespace options
 
         void add_option(const option&);
 
-        auto begin(auto&& self) noexcept
+        auto begin() noexcept
         {
-            return self.list_.begin();
+            return list_.begin();
+        }
+
+        auto begin() const noexcept
+        {
+            return list_.begin();
         }
 
         bool contains(std::string_view option_name) const noexcept
@@ -116,9 +121,14 @@ namespace options
             return list_.empty();
         }
 
-        auto end(auto&& self) noexcept
+        auto end() noexcept
         {
-            return self.list_.end();
+            return list_.end();
+        }
+
+        auto end() const noexcept
+        {
+            return list_.end();
         }
 
         size_type size() const noexcept
