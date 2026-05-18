@@ -9,12 +9,12 @@ namespace options
     {
         using verifier_type = void(*)(std::string_view);
 
-        std::string   short_name        = {};
-        std::string   long_name         = {};
-        std::string   description       = {};
-        bool          is_required       = false;
-        bool          has_arguments     = false;
-        verifier_type argument_verifier = nullptr;
+        std::string_view short_name        = {};
+        std::string_view long_name         = {};
+        std::string_view description       = {};
+        bool             is_required       = false;
+        bool             has_arguments     = false;
+        verifier_type    argument_verifier = nullptr;
 
         std::string representation() const
         {
