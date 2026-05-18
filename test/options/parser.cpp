@@ -4,6 +4,7 @@
 
 #include <string_view>
 #include <stdexcept>
+#include <string>
 
 #include <boost/test/unit_test.hpp>
 
@@ -319,6 +320,47 @@ BOOST_AUTO_TEST_CASE(option_expects_an_argument)
         {
             return std::string_view(exception.what()) ==
                 "parser::parse_command_line: --file expects an argument";
+        });
+}
+
+BOOST_AUTO_TEST_CASE(invalid_argument_for_option)
+{
+    const options::grammar grammar {
+        options::option {
+            .short_name        = "-m",
+            .long_name         = "--mode",
+            .is_required       = true,
+            .has_arguments     = true,
+            .argument_verifier = [](std::string_view argument)
+            {
+                if (argument != "soft" || argument != "hard")
+                {
+                    throw std::logic_error {
+                        std::string("option::argument_verifier: [-m, --mode] ")
+                            .append("expects only arguments 'soft' or 'hard'")
+                    };
+                }
+            }
+        }
+    };
+
+    const char* argv[] = {
+        "<application name>",
+        "-m",
+        "cool",
+        nullptr
+    };
+
+    constexpr auto argc = 3;
+
+    BOOST_CHECK_EXCEPTION(
+        options::parser(grammar).parse_command_line(argc, argv),
+        std::logic_error,
+        [](auto&& exception)
+        {
+            return std::string_view(exception.what()) ==
+                "option::argument_verifier: "
+                "[-m, --mode] expects only arguments 'soft' or 'hard'";
         });
 }
 

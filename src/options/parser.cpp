@@ -112,6 +112,14 @@ options::parser::parse_command_line(int argc, const char** argv) const
                             .append(" expects an argument")
                     };
                 }
+
+                const auto& argument_verifier =
+                    operator[](option).argument_verifier;
+
+                if (argument_verifier != nullptr)
+                {
+                    argument_verifier(argument);
+                }
             }
 
             if (not parsed_options.contains(option))
