@@ -5,6 +5,7 @@
 #include <string_view>
 #include <type_traits>
 #include <stdexcept>
+#include <ostream>
 #include <utility>
 #include <string>
 #include <list>
@@ -152,10 +153,15 @@ namespace options
             };
         }
 
+        inline static constinit std::size_t left_indent  = 4;
+        inline static constinit std::size_t vertical_gap = 1;
+
     private:
 
         std::string                                          description_;
         std::list<option>                                    list_;
         std::unordered_map<std::string_view, const_iterator> map_;
     };
+
+    std::ostream& operator<<(std::ostream&, const grammar&);
 }

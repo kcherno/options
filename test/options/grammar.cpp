@@ -4,6 +4,7 @@
 
 #include <string_view>
 #include <stdexcept>
+#include <sstream>
 #include <utility>
 
 #include <boost/test/unit_test.hpp>
@@ -500,5 +501,236 @@ BOOST_AUTO_TEST_CASE(valid_short_option_names)
 }
 
 BOOST_AUTO_TEST_SUITE_END(); // grammar/verify
+
+BOOST_AUTO_TEST_SUITE(stream_insertion_operator);
+
+BOOST_AUTO_TEST_CASE(default_settings)
+{
+    options::grammar grammar {
+        options::option {
+            .short_name  = "-e",
+            .long_name   = "--edit",
+            .description = "edits files"
+        },
+
+        options::option {
+            .long_name   = "--no-edit",
+            .description = "doesn't edit files"
+        },
+
+        options::option {
+            .short_name  = "-f",
+            .long_name   = "--file",
+            .description = "add input file"
+        },
+
+        options::option {
+            .short_name  = "-h",
+            .long_name   = "--help",
+            .description = "displays a help message"
+        },
+
+        options::option {
+            .short_name  = "-t",
+            .description = "set a timer for replying"
+        },
+
+        options::option {
+            .short_name  = "-v",
+            .long_name   = "--verbose",
+            .description = "enables verbose mode"
+        }
+    };
+
+    grammar.description("general options:");
+
+    std::ostringstream ostringstream;
+
+    ostringstream << grammar;
+
+    std::string_view output =
+        "general options:\n"
+        "\n"
+        "    -e, --edit    edits files\n"
+        "        --no-edit doesn't edit files\n"
+        "    -f, --file    add input file\n"
+        "    -h, --help    displays a help message\n"
+        "    -t            set a timer for replying\n"
+        "    -v, --verbose enables verbose mode";
+
+    BOOST_CHECK_EQUAL(ostringstream.view(), output);
+}
+
+BOOST_AUTO_TEST_CASE(no_description)
+{
+    const options::grammar grammar {
+        options::option {
+            .short_name  = "-e",
+            .long_name   = "--edit",
+            .description = "edits files"
+        },
+
+        options::option {
+            .long_name   = "--no-edit",
+            .description = "doesn't edit files"
+        },
+
+        options::option {
+            .short_name  = "-f",
+            .long_name   = "--file",
+            .description = "add input file"
+        },
+
+        options::option {
+            .short_name  = "-h",
+            .long_name   = "--help",
+            .description = "displays a help message"
+        },
+
+        options::option {
+            .short_name  = "-t",
+            .description = "set a timer for replying"
+        },
+
+        options::option {
+            .short_name  = "-v",
+            .long_name   = "--verbose",
+            .description = "enables verbose mode"
+        }
+    };
+
+    std::ostringstream ostringstream;
+
+    ostringstream << grammar;
+
+    std::string_view output =
+        "    -e, --edit    edits files\n"
+        "        --no-edit doesn't edit files\n"
+        "    -f, --file    add input file\n"
+        "    -h, --help    displays a help message\n"
+        "    -t            set a timer for replying\n"
+        "    -v, --verbose enables verbose mode";
+
+    BOOST_CHECK_EQUAL(ostringstream.view(), output);
+}
+
+BOOST_AUTO_TEST_CASE(vertical_gap_is_zero)
+{
+    options::grammar grammar {
+        options::option {
+            .short_name  = "-e",
+            .long_name   = "--edit",
+            .description = "edits files"
+        },
+
+        options::option {
+            .long_name   = "--no-edit",
+            .description = "doesn't edit files"
+        },
+
+        options::option {
+            .short_name  = "-f",
+            .long_name   = "--file",
+            .description = "add input file"
+        },
+
+        options::option {
+            .short_name  = "-h",
+            .long_name   = "--help",
+            .description = "displays a help message"
+        },
+
+        options::option {
+            .short_name  = "-t",
+            .description = "set a timer for replying"
+        },
+
+        options::option {
+            .short_name  = "-v",
+            .long_name   = "--verbose",
+            .description = "enables verbose mode"
+        }
+    };
+
+    grammar.description("general options:");
+
+    grammar.vertical_gap = 0;
+
+    std::ostringstream ostringstream;
+
+    ostringstream << grammar;
+
+    std::string_view output =
+        "general options:\n"
+        "    -e, --edit    edits files\n"
+        "        --no-edit doesn't edit files\n"
+        "    -f, --file    add input file\n"
+        "    -h, --help    displays a help message\n"
+        "    -t            set a timer for replying\n"
+        "    -v, --verbose enables verbose mode";
+
+    BOOST_CHECK_EQUAL(ostringstream.view(), output);
+}
+
+BOOST_AUTO_TEST_CASE(vertical_gap_and_left_indent_are_zero)
+{
+    options::grammar grammar {
+        options::option {
+            .short_name  = "-e",
+            .long_name   = "--edit",
+            .description = "edits files"
+        },
+
+        options::option {
+            .long_name   = "--no-edit",
+            .description = "doesn't edit files"
+        },
+
+        options::option {
+            .short_name  = "-f",
+            .long_name   = "--file",
+            .description = "add input file"
+        },
+
+        options::option {
+            .short_name  = "-h",
+            .long_name   = "--help",
+            .description = "displays a help message"
+        },
+
+        options::option {
+            .short_name  = "-t",
+            .description = "set a timer for replying"
+        },
+
+        options::option {
+            .short_name  = "-v",
+            .long_name   = "--verbose",
+            .description = "enables verbose mode"
+        }
+    };
+
+    grammar.description("general options:");
+
+    grammar.left_indent  = 0;
+    grammar.vertical_gap = 0;
+
+    std::ostringstream ostringstream;
+
+    ostringstream << grammar;
+
+    std::string_view output =
+        "general options:\n"
+        "-e, --edit    edits files\n"
+        "    --no-edit doesn't edit files\n"
+        "-f, --file    add input file\n"
+        "-h, --help    displays a help message\n"
+        "-t            set a timer for replying\n"
+        "-v, --verbose enables verbose mode";
+
+    BOOST_CHECK_EQUAL(ostringstream.view(), output);
+}
+
+BOOST_AUTO_TEST_SUITE_END(); // grammar/stream_insertion_operator
 
 BOOST_AUTO_TEST_SUITE_END(); // grammar

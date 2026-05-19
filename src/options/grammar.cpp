@@ -2,6 +2,9 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iterator>
+#include <iomanip>
+#include <ostream>
+#include <string>
 
 #include <cctype>
 
@@ -72,4 +75,46 @@ void options::grammar::verify(const option& option)
             "^--[a-zA-Z][-a-zA-Z0-9]*[a-zA-Z]$"
         };
     }
+}
+
+std::ostream& options::operator<<(
+    std::ostream& ostream, const grammar& grammar)
+{
+    if (not grammar.description().empty())
+    {
+        ostream << grammar.description() << '\n'
+                << std::string(grammar.vertical_gap, '\n');
+    }
+
+    const auto gap =
+        std::ranges::max_element(grammar, [](auto&& lhs, auto&& rhs)
+        {
+            return lhs.long_name.size() < rhs.long_name.size();
+        })->long_name.size();
+
+    std::for_each(grammar.begin(), std::prev(grammar.end()), [&](auto&& option)
+    {
+        ostream << std::string(grammar.left_indent, ' ')
+                << option.short_name
+                << (option.short_name.empty() ? "    " :
+                        (option.long_name.empty() ? "  " : ", "))
+                << std::setw(gap)
+                << std::left
+                << option.long_name
+                << ' '
+                << option.description
+                << '\n';
+    });
+
+    const auto& option = *std::prev(grammar.end());
+
+    return ostream << std::string(grammar.left_indent, ' ')
+                   << option.short_name
+                   << (option.short_name.empty() ? "    " :
+                           (option.long_name.empty() ? "  " : ", "))
+                   << std::setw(gap)
+                   << std::left
+                   << option.long_name
+                   << ' '
+                   << option.description;
 }
