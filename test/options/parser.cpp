@@ -14,6 +14,56 @@
 
 BOOST_AUTO_TEST_SUITE(parser);
 
+BOOST_AUTO_TEST_SUITE(parsed_options);
+
+BOOST_AUTO_TEST_SUITE(subscript_operator);
+
+BOOST_AUTO_TEST_CASE(option_is_not_stored)
+{
+    const char* argv[] = {"<application name>", nullptr};
+
+    constexpr int argc = 1;
+
+    const auto& [parsed_options, positional_options] =
+        options::parser().parse_command_line(argc, argv);
+
+    BOOST_CHECK_EXCEPTION(
+        parsed_options["-h"], std::runtime_error, [](auto&& exception)
+        {
+            return std::string_view(exception.what()) ==
+                "parser::parsed_options::operator[]: -h is not stored";
+        });
+}
+
+BOOST_AUTO_TEST_CASE(option_has_no_arguments)
+{
+    const options::grammar grammar {
+        options::option {
+            .short_name = "-h",
+            .long_name  = "--help"
+        }
+    };
+
+    const char* argv[] = {"<application name>", "-h", nullptr};
+
+    constexpr int argc = 2;
+
+    const auto& [parsed_options, positional_options] =
+        options::parser(grammar).parse_command_line(argc, argv);
+
+    BOOST_CHECK_EXCEPTION(
+        parsed_options["-h"], std::logic_error, [](auto&& exception)
+        {
+            return std::string_view(exception.what()) ==
+                "parser::parsed_options::operator[]: "
+                "[-h, --help] has no arguments";
+        });
+}
+
+BOOST_AUTO_TEST_SUITE_END(); // parser/parsed_options/subscript_operator
+
+BOOST_AUTO_TEST_SUITE_END(); // parser/parsed_options
+
 BOOST_AUTO_TEST_SUITE(constructor);
 
 BOOST_AUTO_TEST_CASE(default_constructor)

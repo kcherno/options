@@ -4,6 +4,7 @@
 #include <iterator>
 #include <utility>
 #include <string>
+#include <vector>
 
 #include "options/is_short_option_name.hpp"
 #include "options/is_long_option_name.hpp"
@@ -22,6 +23,34 @@ void options::parser::parsed_options::add_option(const option& option)
     {
         map_[option.long_name] = std::prev(list_.end());
     }
+}
+
+const std::vector<std::string_view>&
+options::parser::parsed_options::operator[](std::string_view option_name) const
+{
+    auto iterator = map_.find(option_name);
+
+    if (iterator == map_.end())
+    {
+        throw std::runtime_error {
+            std::string("parser::parsed_options::operator[]: ")
+                .append(option_name)
+                .append(" is not stored")
+        };
+    }
+
+    const auto& [option, arguments] = *(iterator->second);
+
+    if (not option.has_arguments)
+    {
+        throw std::logic_error {
+            std::string("parser::parsed_options::operator[]: [")
+                .append(option.representation())
+                .append("] has no arguments")
+        };
+    }
+
+    return arguments;
 }
 
 namespace

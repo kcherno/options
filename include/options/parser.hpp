@@ -70,10 +70,7 @@ namespace options
             }
 
             const std::vector<std::string_view>& operator[](
-                std::string_view option_name) const
-            {
-                return map_.at(option_name)->second;
-            }
+                std::string_view) const;
 
         private:
 
