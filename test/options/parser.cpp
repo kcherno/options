@@ -373,6 +373,53 @@ BOOST_AUTO_TEST_CASE(option_expects_an_argument)
         });
 }
 
+BOOST_AUTO_TEST_CASE(option_arguments_are_not_required)
+{
+    const options::grammar grammar {
+        options::option {
+            .short_name    = "-f",
+            .long_name     = "--file",
+            .has_arguments = true
+        },
+
+        options::option {
+            .short_name             = "-h",
+            .long_name              = "--help",
+            .has_arguments          = true,
+            .are_arguments_required = false
+        }
+    };
+
+    const char* argv[] = {
+        "<application name>",
+        "--help",
+        "a",
+        "-f",
+        "file_1.txt",
+        "-h",
+        "--file=file_2.txt",
+        nullptr
+    };
+
+    constexpr int argc = 2;
+
+    BOOST_CHECK_NO_THROW(
+        options::parser(grammar).parse_command_line(argc, argv));
+
+    const auto& [parsed_options, positional_options] =
+        options::parser(grammar).parse_command_line(argc, argv);
+
+    BOOST_CHECK_NO_THROW(parsed_options["-h"]);
+
+    BOOST_CHECK_EQUAL(parsed_options["-h"].size(), 1);
+    BOOST_CHECK_EQUAL(parsed_options["-h"][0], "a");
+
+    BOOST_CHECK_NO_THROW(parsed_options["--help"]);
+
+    BOOST_CHECK_EQUAL(parsed_options["--help"].size(), 1);
+    BOOST_CHECK_EQUAL(parsed_options["--help"][0], "a");
+}
+
 BOOST_AUTO_TEST_CASE(invalid_argument_for_option)
 {
     const options::grammar grammar {

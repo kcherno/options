@@ -133,7 +133,8 @@ options::parser::parse_command_line(int argc, const char** argv) const
                     }
                 }
 
-                if (argument.empty())
+                if (operator[](option).are_arguments_required &&
+                        argument.empty())
                 {
                     throw std::runtime_error {
                         std::string("parser::parse_command_line: ")
@@ -142,12 +143,9 @@ options::parser::parse_command_line(int argc, const char** argv) const
                     };
                 }
 
-                const auto& argument_verifier =
-                    operator[](option).argument_verifier;
-
-                if (argument_verifier != nullptr)
+                if (operator[](option).argument_verifier)
                 {
-                    argument_verifier(argument);
+                    operator[](option).argument_verifier(argument);
                 }
             }
 
