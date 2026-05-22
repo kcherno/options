@@ -143,7 +143,8 @@ options::parser::parse_command_line(int argc, const char** argv) const
                     };
                 }
 
-                if (operator[](option).argument_verifier)
+                if (operator[](option).argument_verifier &&
+                        not argument.empty())
                 {
                     operator[](option).argument_verifier(argument);
                 }
