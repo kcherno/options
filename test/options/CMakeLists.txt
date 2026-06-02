@@ -11,8 +11,8 @@ foreach(source_file ${source_files})
 
 endforeach()
 
-target_sources(grammar PRIVATE ${CMAKE_SOURCE_DIR}/src/options/grammar.cpp)
+target_sources(grammar PRIVATE ${PROJECT_SOURCE_DIR}/src/options/grammar.cpp)
 
 target_sources(parser
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/options/grammar.cpp
-    PRIVATE ${CMAKE_SOURCE_DIR}/src/options/parser.cpp)
+    PRIVATE ${PROJECT_SOURCE_DIR}/src/options/grammar.cpp
+    PRIVATE ${PROJECT_SOURCE_DIR}/src/options/parser.cpp)
